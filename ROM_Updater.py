@@ -1,6 +1,6 @@
 """
 Program to update a folder of ROMs (or any file) with identically named
-replacements located in another foler. The purpose of this program was to
+replacements located in another folder. The purpose of this program was to
 allow myself to update my curated lists of ROMs without a large amount of
 manual work. The program also records a CSV file in the old ROM directory
 with a list of all of the ROM filenames.
