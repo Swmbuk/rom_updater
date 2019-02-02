@@ -20,7 +20,7 @@ The script was created for Python 3 and should be used to point to two directori
 * Original ROMs directory
 * New ROMs (presumably an entire new ROM set) directory
 
-Usage: ``` python rom_updater.py [Original ROMs] [New ROMS]```
+Usage: ``` python rom_updater.py <Original ROMs> <New ROMS>```
 
 When running the script it will search to ensure a match is found using the filename
 of each ROM. Once concluded it will inform you of the ROMs matched and those it
