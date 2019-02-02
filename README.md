@@ -17,10 +17,10 @@ set.
 
 The script was created for Python 3 and should be used to point to two directories:
 
-* Original ROMs directory
-* New ROMs (presumably an entire new ROM set) directory
+*   Original ROMs directory
+*   New ROMs (presumably an entire new ROM set) directory
 
-Usage: ``` python rom_updater.py <Original ROMs> <New ROMS>```
+Usage: ```python rom_updater.py <Original ROMs> <New ROMS>```
 
 When running the script it will search to ensure a match is found using the filename
 of each ROM. Once concluded it will inform you of the ROMs matched and those it
@@ -32,6 +32,6 @@ filenames to act as a backup for your collection.
 
 ### Considerations
 
-* Be careful! This script will replace any files listed in the original directory with those with the identical filename located in the new directory
-* The script is set to only match and replace .zip files. You can update the script on line 17 to work with other file extensions.
-* The script was created with the presumption that you will be using matching ROM sets, which typically have identical file names. Occasionally ROM sets update some filenames, which will require reading of the script readout and a couple manual movements of ROMs.
+*   Be careful! This script will replace any files listed in the original directory with those with the identical filename located in the new directory
+*   The script is set to only match and replace .zip files. You can update the script on line 17 to work with other file extensions.
+*   The script was created with the presumption that you will be using matching ROM sets, which typically have identical file names. Occasionally ROM sets update some filenames, which will require reading of the script readout and a couple manual movements of ROMs.
