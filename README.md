@@ -17,8 +17,8 @@ set.
 
 The script was created for Python 3 and should be used to point to two directories:
 
-* Original ROMs
-* New ROMs (presumably an entire new ROM set)
+* Original ROMs directory
+* New ROMs (presumably an entire new ROM set) directory
 
 Usage: ``` python rom_updater.py [Original ROMs] [New ROMS]```
 

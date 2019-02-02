@@ -61,7 +61,7 @@ def match_copy(old_file_list, new_file_list, copy):
 
 # Check if 2 arguments were provided at command line
 if len(sys.argv) != 3:
-    print('Error! Usage: python ROM_Update.py "Old ROMs Location" "New ROMs Location"')
+    print('Error! Usage: python rom_updater.py <Old ROMs Directory> <New ROMs Directory>')
     sys.exit(1)
 
 # Store command line arguments to constants
