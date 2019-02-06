@@ -93,13 +93,11 @@ OLDLIST = dir_to_list(OLDDIR, ROMTYPE)
 NEWLIST = dir_to_list(NEWDIR, ROMTYPE)
 
 # Create a CSV containing a list of all of the old ROM filenames
-OUTPUTFILE = open(OLDDIR + '/oldlist.csv', 'w', newline='')
-OUTPUTWRITER = csv.writer(OUTPUTFILE)
-# Write each old ROM filename to a row in the CSV
-for ROM in OLDLIST:
-    OUTPUTWRITER.writerow([ROM])
-# Close file
-OUTPUTFILE.close()
+with open(OLDDIR + '/oldlist.csv', 'w', newline='') as OUTPUTFILE:
+    OUTPUTWRITER = csv.writer(OUTPUTFILE)
+    # Write each old ROM filename to a row in the CSV
+    for ROM in OLDLIST:
+        OUTPUTWRITER.writerow([ROM])
 print('oldlist.csv created in old ROM directory')
 
 # Call function to show matches and errors
