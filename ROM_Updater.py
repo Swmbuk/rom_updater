@@ -17,6 +17,61 @@ import csv
 # Select the filetype for the ROMs
 ROMTYPE = '.zip'
 
+def main():
+    """
+    Main script.
+    """
+    # Check if 2 arguments / paths were provided at command line
+    if len(sys.argv) != 3:
+        print('Error! Usage: python rom_updater.py <Old ROMs Directory> <New ROMs Directory>')
+        sys.exit(1)
+
+    # Store file path command line arguments as constants
+    old_dir = check_dir(sys.argv[1])
+    new_dir = check_dir(sys.argv[2])
+
+    # Call function to store all ROMs in the new and old directories in lists
+    old_list = dir_to_list(old_dir, ROMTYPE)
+    new_list = dir_to_list(new_dir, ROMTYPE)
+
+    # Create a CSV containing a list of all of the old ROM filenames
+    with open(old_dir + '/oldlist.csv', 'w', newline='') as output_file:
+        output_writer = csv.writer(output_file)
+        # Write each old ROM filename to a row in the CSV
+        for rom in old_list:
+            output_writer.writerow([rom])
+    print('oldlist.csv created in old ROM directory')
+
+    # Call function to show matches and errors
+    match_list, errors = match_rom(old_list, new_list)
+
+    # Print summary of the ROM matching process. Show warning message if any unmatched
+    print('\n***Match Summary***')
+    print('Total New ROMs discovered:', len(new_list))
+    print('Total Old ROMs discovered:', len(old_list))
+    print('Total New ROMs matched to old ROMs:', len(match_list))
+    if errors > 0:
+        print('\x1b[0;49;91m', end='')
+        print('WARNING!! Total Old ROMs unable to be matched:', errors)
+        print('\x1b[0m', end='')
+    else:
+        print('Total Old ROMs unable to be matched:', errors)
+
+    # Prompt user to confirm whether they would like to proceed to replacing ROMs
+    if input('\nWould you like to proceed to replacement (y/n)?').lower() == 'y':
+        print('')
+        # Call function to move matches from old directory to new directory
+        copied = copy_rom(match_list, old_dir, new_dir)
+        # Print summary of ROM replacement
+        print('\n***Copy Summary***')
+        print('Total New ROMs Matched and Copied:', copied)
+        print('Total Old ROMs Unable to be matched:', errors)
+    else:
+        print('No changes made.')
+
+    # Exit with success code
+    sys.exit(0)
+
 def check_dir(directory):
     """
     Function to verify that the directory path passed to it is valid, otherwise
@@ -68,65 +123,17 @@ def match_rom(old_file_list, new_file_list):
             errors += 1
     return matches, errors
 
-def copy_rom(match_file_list):
+def copy_rom(match_file_list, old_dir, new_dir):
     """
     Function to take a list of matching ROM filenames in two directories (old
     ROMs and new ROMs) and copies these files.
     """
     copied = 0
     for match_file in match_file_list:
-        shutil.copy(NEWDIR + '/' + match_file, OLDDIR + '/' + match_file)
+        shutil.copy(new_dir + '/' + match_file, old_dir + '/' + match_file)
         print('New ROM copied and replaced Old ROM: ' + match_file)
         copied += 1
     return copied
 
-# Check if 2 arguments / paths were provided at command line
-if len(sys.argv) != 3:
-    print('Error! Usage: python rom_updater.py <Old ROMs Directory> <New ROMs Directory>')
-    sys.exit(1)
-
-# Store file path command line arguments as constants
-OLDDIR = check_dir(sys.argv[1])
-NEWDIR = check_dir(sys.argv[2])
-
-# Call function to store all ROMs in the new and old directories in lists
-OLDLIST = dir_to_list(OLDDIR, ROMTYPE)
-NEWLIST = dir_to_list(NEWDIR, ROMTYPE)
-
-# Create a CSV containing a list of all of the old ROM filenames
-with open(OLDDIR + '/oldlist.csv', 'w', newline='') as OUTPUTFILE:
-    OUTPUTWRITER = csv.writer(OUTPUTFILE)
-    # Write each old ROM filename to a row in the CSV
-    for ROM in OLDLIST:
-        OUTPUTWRITER.writerow([ROM])
-print('oldlist.csv created in old ROM directory')
-
-# Call function to show matches and errors
-MATCHLIST, ERRORS = match_rom(OLDLIST, NEWLIST)
-
-# Print summary of the ROM matching process. Show warning message if any unmatched
-print('\n***Match Summary***')
-print('Total New ROMs discovered:', len(NEWLIST))
-print('Total Old ROMs discovered:', len(OLDLIST))
-print('Total New ROMs matched to old ROMs:', len(MATCHLIST))
-if ERRORS > 0:
-    print('\x1b[0;49;91m', end='')
-    print('WARNING!! Total Old ROMs unable to be matched:', ERRORS)
-    print('\x1b[0m', end='')
-else:
-    print('Total Old ROMs unable to be matched:', ERRORS)
-
-# Prompt user to confirm whether they would like to proceed to replacing ROMs
-if input('\nWould you like to proceed to replacement (y/n)?').lower() == 'y':
-    print('')
-    # Call function to move matches from old directory to new directory
-    COPIED = copy_rom(MATCHLIST)
-    # Print summary of ROM replacement
-    print('\n***Copy Summary***')
-    print('Total New ROMs Matched and Copied:', COPIED)
-    print('Total Old ROMs Unable to be matched:', ERRORS)
-else:
-    print('No changes made.')
-
-# Exit with success code
-sys.exit(0)
+if __name__ == "__main__":
+    main()
