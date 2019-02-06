@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 """
 Program to update a folder of ROMs (or any file) with identically named
 replacements located in another folder. The purpose of this program was to
@@ -39,13 +40,13 @@ def dir_to_list(directory, filetype):
             filenamelist.append(file)
     return filenamelist
 
-
 def match_rom(old_file_list, new_file_list):
     """
     Function to match ROM filenames in two lists of old ROMs and new ROMs.
     Returns a tuple of a list of matched filenames in both directories and an
     integer of unmatched old ROM errors respectively.
     """
+    # list to store matched filenames and variable to store unmatched old ROMs
     matches = []
     errors = 0
 
