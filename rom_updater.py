@@ -91,7 +91,7 @@ def dir_to_list(directory, filetype):
     """
     filenamelist = []
     for file in os.listdir(directory):
-        if file.endswith(filetype):
+        if file.endswith(filetype) and not file.startswith('.'):
             filenamelist.append(file)
     return filenamelist
 
