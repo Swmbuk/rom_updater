@@ -44,7 +44,7 @@ def main():
     print('oldlist.csv created in old ROM directory')
 
     # Call function to show matches and errors
-    match_list, errors = match_rom(old_list, new_list)
+    match_list, delete_list, errors = match_rom(old_list, new_list)
 
     # Print summary of the ROM matching process. Show warning message if any unmatched
     print('\n***Match Summary***')
@@ -62,7 +62,7 @@ def main():
     if input('\nWould you like to proceed to replacement (y/n)?').lower() == 'y':
         print('')
         # Call function to move matches from old directory to new directory
-        copied = copy_rom(match_list, old_dir, new_dir)
+        copied = copy_rom(match_list, delete_list, old_dir, new_dir)
         # Print summary of ROM replacement
         print('\n***Copy Summary***')
         print('Total New ROMs Matched and Copied:', copied)
@@ -104,6 +104,7 @@ def match_rom(old_file_list, new_file_list):
     """
     # list to store matched filenames and variable to store unmatched old ROMs
     matches = []
+    delete = []
     errors = 0
 
     for old_file in old_file_list:
@@ -122,24 +123,43 @@ def match_rom(old_file_list, new_file_list):
             print('Error! Unable to locate a New ROM: ' + old_file)
             # Find close filename matches (max of 3, min of 0)
             close = difflib.get_close_matches(old_file, new_file_list)
+            # If any found inform the user and prompt them to choose or skip
             if close:
-                print(len(close), 'close filename/s found:')
+                print('\x1b[0;49;96m', end='')
+                print(len(close), 'Close filename/s found:\n0 : Skip')
+                close_no = 1
                 for closefiles in close:
-                    print(closefiles)
+                    print(close_no, ': Copy', closefiles)
+                    close_no += 1
+                # Ensure correct choice is provided
+                while True:
+                    choice = int(input('Choice: '))
+                    if 0 <= choice <= len(close):
+                        break
+                # Skip if user chooses or append close user choice to the match list
+                if choice == 0:
+                    print(old_file, 'skipped')
+                    errors += 1
+                else:
+                    matches.append(close[choice - 1])
+                    delete.append(old_file)
+                    print(close[choice - 1], 'matched and will replace old ROM.')
             print('\x1b[0m', end='')
-            errors += 1
-    return matches, errors
+    return matches, delete, errors
 
-def copy_rom(match_file_list, old_dir, new_dir):
+def copy_rom(match_file_list, delete_file_list, old_dir, new_dir):
     """
     Function to take a list of matching ROM filenames in two directories (old
-    ROMs and new ROMs) and copies these files.
+    ROMs and new ROMs) and copies these files. A delete list is also taken to
+    remove ROMs that have been renamed.
     """
     copied = 0
     for match_file in match_file_list:
         shutil.copy(new_dir + '/' + match_file, old_dir + '/' + match_file)
         print('New ROM copied and replaced Old ROM: ' + match_file)
         copied += 1
+    for delete_file in delete_file_list:
+        os.unlink(old_dir + '/' + delete_file)
     return copied
 
 if __name__ == "__main__":
