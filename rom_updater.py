@@ -93,7 +93,7 @@ def dir_to_list(directory, filetype):
     for file in os.listdir(directory):
         if file.endswith(filetype) and not file.startswith('.'):
             filenamelist.append(file)
-    return filenamelist
+    return sorted(filenamelist)
 
 def match_rom(old_file_list, new_file_list):
     """
