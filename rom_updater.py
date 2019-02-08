@@ -13,6 +13,7 @@ import sys
 import os
 import shutil
 import csv
+import difflib
 
 # Select the filetype for the ROMs
 ROMTYPE = '.zip'
@@ -119,6 +120,7 @@ def match_rom(old_file_list, new_file_list):
         if not match:
             print('\x1b[0;49;91m', end='')
             print('Error! Unable to locate a New ROM: ' + old_file)
+            print('Close matches: '+ difflib.get_close_matches(old_file, new_file_list))
             print('\x1b[0m', end='')
             errors += 1
     return matches, errors
