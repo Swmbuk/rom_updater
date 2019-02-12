@@ -1,37 +1,42 @@
 # rom_updater
-Command line script to replace curated folders of ROM files and save the lists
-as CSVs.
+Command line tool to copy ROMs from an updated romset using either an existing target directory of curated ROMs or a CSV file.
 
-### Summary
+## Summary
 
-I created the script to make the task of updating ROM files in my RetroPie setup
-easier. Personally I prefer to only keep my favorite ROMs together as opposed to
-storing every ROM from a set and having to scroll through a lot of bloat.
+I created the tool to make the task of updating ROM files in my RetroPie setup easier. Personally I prefer to only keep my favorite ROMs together as opposed to storing every ROM from a full romset and having to scroll through a lot of bloat.
 
-This creates a problem when you wish to update your ROM set as you will need to
-manually curate the ROMs again. This script therefore takes your old ROMs in a
-directory and uses this to find replacements in a new directory of a full new ROM
-set.
+This creates a problem when you wish to update your ROM set as you will need to manually curate the ROMs again. This tool therefore takes your existing ROM filenames in a directory and uses this to find replacements in a new source directory of a full new romset.
 
-### Usage
+As ROMs frequently change names the tool will attempt to find similarly named ROMs in the new source romset directory and outline close suggestions it has found. You may then choose to select a suggestion or skip the ROM. This option may be turned off if it is undesirable.
 
-The script was created for Python 3 and should be used to point to two directories:
+The tool can also take a CSV file of ROM filenames as opposed to searching an existing target directory of ROM filenames. This is useful for backup purposes or sharing curated lists.
 
-*   Original ROMs directory
-*   New ROMs (presumably an entire new ROM set) directory
+The tool will also create CSV files for the original target directory ROM filenames, matched ROM filenames and unmatched ROM filenames.
 
-Usage: ```python rom_updater.py <Original ROMs> <New ROMS>```
+## Usage
 
-When running the script it will search to ensure a match is found using the filename
-of each ROM. Once concluded it will inform you of the ROMs matched and those it
-was unable to find in the new ROM directory. If you wish to proceed with the
-replacement process you will then need to confirm.
+The tool was created for Python 3 and can take a number of arguments at the command line:
 
-Additionally the script creates a CSV file with a list of all of the original ROM
-filenames to act as a backup for your collection.
+Usage: ```python3 rom_updater.py [-h] [-ns] [-c CSV] source target```
+
+#### Mandatory arguments
+
+*   ```source``` Source directory of new ROMs.
+*   ```target``` Destination directory where ROMs will be matched and transferred to unless a CSV file is loaded. ROMs in this directory will be overwritten by matches in the source directory.
+
+#### Optional arguments
+
+*   ```-h``` Show help message 
+*   ```-ns``` Disable similar ROM filename suggestion function.
+*   ```-c``` CSV of ROM filenames to be transferred from the source to the target directory. One filename per row in a single column.
+
+When running the tool it will search to ensure a match is found using the filename of each ROM or suggest a similar filename. Once the matching process has concluded you will be prompt if you wish to proceed with the replacement process, whereby the original ROMs in the target directory will be replaced.
+
+Throughout the process the tool will create CSVs in the target directory showing the original ROM filenames, matched filenames and unmatched filenames.
 
 ### Considerations
 
-*   Be careful! This script will replace any files listed in the original directory with those with the identical filename located in the new directory
-*   The script is set to only match and replace .zip files. You can update the script on line 17 to work with other file extensions.
-*   The script was created with the presumption that you will be using matching ROM sets, which typically have identical file names. Occasionally ROM sets update some filenames, which will require reading of the script readout and a couple manual movements of ROMs.
+*   Be careful! This tool will replace any files listed in the original target directory with those with the identical filename located in the new source directory. Remember to backup any files you care about.
+*   The tool is set to only match and replace .zip ROMs. You can update the tool on line 19 to work with other file extensions.
+*   The tool was created with the presumption that you will be using matching romsets, which typically have identical or similar filenames.
+*   As of the time of writing I am new to development and there may be some inefficiencies in the code. I will periodically come back and update the tool as I learn more. Feel free to make any suggestions!
