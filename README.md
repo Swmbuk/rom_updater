@@ -35,7 +35,7 @@ When running the tool it will search to ensure a match is found using the filena
 
 Throughout the process the tool will create CSVs in the target directory showing the original ROM filenames, matched filenames and unmatched filenames.
 
-### Considerations
+## Considerations
 
 * Be careful! This tool will replace any files listed in the original target directory with those with the identical filename located in the new source directory. Remember to backup any files you care about.
 * The tool is set to only match and replace .zip ROMs. You can update the tool on line 19 to work with other file extensions.
