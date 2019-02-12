@@ -134,14 +134,14 @@ def csv_to_list(csv_file):
     Function to read a csv file and convert the entries on each row to a list.
     """
     csv_list = []
-    # Create a CSV containing a list of all of the old ROM filenames
+    # Open CSV file for reading as provided to the function
     with open(csv_file, 'r', newline='') as input_file:
         input_reader = csv.reader(input_file)
-        # Write each old ROM filename to a row in the CSV
+        # Read each row in the csv and save to a list
         for row in input_reader:
             csv_list.append(row[0])
-
-    return csv_list
+    # Return CSV contents as list
+    return sorted(csv_list)
 
 
 def list_to_csv(csvlist, filename, path):
