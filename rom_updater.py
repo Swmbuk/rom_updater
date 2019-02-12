@@ -117,12 +117,13 @@ def match_rom(old_file_list, new_file_list):
                 print('New ROM matched to Old ROM: ' + new_file)
                 matches.append(new_file)
                 match = True
+                break
         # If no match was found print an error message and add to error counter
         if not match:
             print('\x1b[0;49;91m', end='')
             print('Error! Unable to locate a New ROM: ' + old_file)
             # Find close filename matches (max of 3, min of 0)
-            close = difflib.get_close_matches(old_file, new_file_list)
+            close = difflib.get_close_matches(old_file, new_file_list, n=5)
             # If any found inform the user and prompt them to choose or skip
             if close:
                 print('\x1b[0;49;96m', end='')
