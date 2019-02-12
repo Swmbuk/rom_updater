@@ -32,9 +32,9 @@ def main():
     parser.add_argument("target", type=check_dir, help="""Destination directory where ROMs will be
     matched and transferred to unless a CSV file is loaded. ROMs in this directory will be 
     overwritten by matches in the source directory.""")
+    parser.add_argument('-ns', '--nosuggest', action='store_true', help='Disable similar ROM filename suggestion function.')
     parser.add_argument('-c', '--csv', type=check_csv, help="""CSV of
     ROM filenames to be transferred from the source to the target directory. One filename per row.""")
-    parser.add_argument('-ns', '--nosuggest', action='store_true', help='Disable similar ROM filename suggestion function.')
     args = parser.parse_args()
 
 
@@ -48,7 +48,7 @@ def main():
     else:
         old_list = dir_to_list(args.target, ROMTYPE)
         # Create CSV backup of existing ROM filenames in target directory
-        list_to_csv(old_list, 'old_roms.csv', args.target)
+        list_to_csv(old_list, 'original_roms.csv', args.target)
         delete_originals = True
 
     # Call function to show matches and errors
