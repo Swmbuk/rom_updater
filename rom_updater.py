@@ -23,25 +23,8 @@ def main():
     """
     Main script.
     """
-    # Takes command line arguments using the argparse library to build help
-    # files and check paths
-    parser = argparse.ArgumentParser(description="""Tool to match and copy
-    select ROMs from a new romset using either an existing destination directory 
-    of old ROMs or a CSV file of ROM filenames. Filenames are used to match ROMs
-    and similar filename matches are sought when a perfect match cannot be
-    obtained.""")
-    parser.add_argument("source", type=check_dir,
-                        help="Source directory of new ROMs.")
-    parser.add_argument("target", type=check_dir, help="""Destination directory
-    where ROMs will be matched and transferred to unless a CSV file is loaded. 
-    ROMs in this directory will be overwritten by matches in the source 
-    directory.""")
-    parser.add_argument('-ns', '--nosuggest', action='store_true',
-                        help='Disable similar ROM filename suggestion function')
-    parser.add_argument('-c', '--csv', type=check_csv, help="""CSV of
-    ROM filenames to be transferred from the source to the target directory. One
-    filename per row.""")
-    args = parser.parse_args()
+    # Collect command line argument values from function
+    args = get_args()
 
     # Call function to store ROM filenames in source directory in list
     source_list = dir_to_list(args.source, ROMTYPE)
@@ -92,6 +75,35 @@ def main():
 
     # Exit with success code
     sys.exit(0)
+
+
+def get_args():
+    """
+    Function to ensure appropriate arguments have been provided for the tool and
+    to provide help messaging based on the required and optional arguments.
+    If appropriate arguments are provided the values are returned.
+    """
+    # General description of the program
+    parser = argparse.ArgumentParser(description="""Tool to match and copy
+    select ROMs from a new romset using either an existing destination directory 
+    of old ROMs or a CSV file of ROM filenames. Filenames are used to match ROMs
+    and similar filename matches are sought when a perfect match cannot be
+    obtained.""")
+    # Add two mandatory directory arguments, with dir checks function calls
+    parser.add_argument("source", type=check_dir,
+                        help="Source directory of new ROMs.")
+    parser.add_argument("target", type=check_dir, help="""Destination directory
+    where ROMs will be matched and transferred to unless a CSV file is loaded. 
+    ROMs in this directory will be overwritten by matches in the source 
+    directory.""")
+    # Add two optional arguments, with CSV check function calls
+    parser.add_argument('-ns', '--nosuggest', action='store_true',
+                        help='Disable similar ROM filename suggestion function')
+    parser.add_argument('-c', '--csv', type=check_csv, help="""CSV of
+    ROM filenames to be transferred from the source to the target directory. One
+    filename per row.""")
+    # Assuming no issues return the argument values
+    return parser.parse_args()
 
 
 def check_dir(directory):
@@ -172,18 +184,12 @@ def match_rom(target_file_list, source_file_list, delete_list, no_suggest):
     delete = []
 
     for target_file in target_file_list:
-        # Boolean to check whether a match has been found
-        match = False
-        # Iterate over the new files in the new file list
-        for source_file in source_file_list:
-            # Check if the old and new ROM filenames match
-            if target_file == source_file:
-                print('New source ROM matched: ' + source_file)
-                matches.append(source_file)
-                match = True
-                break
-        # If no match was found print an error message and add to error counter
-        if not match:
+        # Check if target file in source file list
+        if target_file in source_file_list:
+            print('New source ROM matched: ' + target_file)
+            matches.append(target_file)
+        # If no match was found print an error message and try find similar
+        else:
             print('\x1b[0;49;91m', end='')
             print('Error! Unable to locate a source ROM: ' + target_file)
             # Check if no-suggest flag given
@@ -194,11 +200,11 @@ def match_rom(target_file_list, source_file_list, delete_list, no_suggest):
                 # If any found inform the user and prompt them to choose or skip
                 if close:
                     print('\x1b[0;49;96m', end='')
-                    print(len(close), 'Close ROM filename/s found:\n0 : Skip')
-                    close_no = 1
+                    print(len(close), 'close ROM filename/s found:\n0 : Skip')
+                    close_no = 0
                     for close_files in close:
-                        print(close_no, ': Copy', close_files)
                         close_no += 1
+                        print(close_no, ': Copy', close_files)
                     # Ensure correct choice is provided
                     while True:
                         choice = int(input('Choice: '))
