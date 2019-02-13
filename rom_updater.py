@@ -160,7 +160,7 @@ def list_to_csv(csvlist, filename, path):
     """
     Create a CSV containing from a list of filenames.
     """
-    with open(path + filename, 'w', newline='') as output_file:
+    with open(path + '/' + filename, 'w', newline='') as output_file:
         output_writer = csv.writer(output_file)
         # Write each old ROM filename to a row in the CSV
         for rom in csvlist:
