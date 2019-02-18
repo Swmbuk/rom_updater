@@ -20,9 +20,7 @@ ROMTYPE = '.zip'
 
 
 def main():
-    """
-    Main script.
-    """
+    """Main script"""
     # Collect command line argument values from function
     args = get_args()
 
@@ -90,18 +88,26 @@ def get_args():
     and similar filename matches are sought when a perfect match cannot be
     obtained.""")
     # Add two mandatory directory arguments, with dir checks function calls
-    parser.add_argument("source", type=check_dir,
-                        help="Source directory of new ROMs.")
-    parser.add_argument("target", type=check_dir, help="""Destination directory
-    where ROMs will be matched and transferred to unless a CSV file is loaded. 
-    ROMs in this directory will be overwritten by matches in the source 
-    directory.""")
+    parser.add_argument(
+        "source", type=check_dir, help="Source directory of new ROMs.")
+    parser.add_argument(
+        "target",
+        type=check_dir,
+        help="""Destination directory where ROMs will be matched and transferred
+         to unless a CSV file is loaded. ROMs in this directory will be
+         overwritten by matches in the source directory.""")
     # Add two optional arguments, with CSV check function calls
-    parser.add_argument('-ns', '--nosuggest', action='store_true',
-                        help='Disable similar ROM filename suggestion function')
-    parser.add_argument('-c', '--csv', type=check_csv, help="""CSV of
-    ROM filenames to be transferred from the source to the target directory. One
-    filename per row.""")
+    parser.add_argument(
+        '-ns',
+        '--nosuggest',
+        action='store_true',
+        help='Disable similar ROM filename suggestion function')
+    parser.add_argument(
+        '-c',
+        '--csv',
+        type=check_csv,
+        help="""CSV of ROM filenames to be transferred from the source to the
+        target directory. One filename per row.""")
     # Assuming no issues return the argument values
     return parser.parse_args()
 
@@ -134,10 +140,10 @@ def dir_to_list(directory, filetype):
     Function to find a filetype in a directory and place the filename in a list
     that is returned.
     """
-    filenamelist = []
+    filenamelist = set()
     for file in os.listdir(directory):
         if file.endswith(filetype) and not file.startswith('.'):
-            filenamelist.append(file)
+            filenamelist.add(file)
     return sorted(filenamelist)
 
 
@@ -145,13 +151,13 @@ def csv_to_list(csv_file):
     """
     Function to read a csv file and convert the entries on each row to a list.
     """
-    csv_list = []
+    csv_list = set()
     # Open CSV file for reading as provided to the function
     with open(csv_file, 'r', newline='') as input_file:
         input_reader = csv.reader(input_file)
         # Read each row in the csv and save to a list
         for row in input_reader:
-            csv_list.append(row[0])
+            csv_list.add(row[0])
     # Return CSV contents as list
     return sorted(csv_list)
 
