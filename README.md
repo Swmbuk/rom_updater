@@ -1,4 +1,4 @@
-# rom_updater
+# ROM Updater
 
 Command line tool to copy ROMs from an updated romset using either an existing target directory of curated ROMs or a CSV file.
 
